@@ -6,6 +6,9 @@ class Author(models.Model):
     last_name = models.CharField(max_length=63)
     pseudonim = models.CharField(max_length=63, blank=True, null=True)
 
+    def __str__(self) -> str:
+        return f"{self.first_name} {self.last_name} ({self.pseudonim})"
+
 
 class Book(models.Model):
     class CoverChoices(models.TextChoices):
@@ -21,3 +24,6 @@ class Book(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+    class Meta:
+        ordering = ("title",)
