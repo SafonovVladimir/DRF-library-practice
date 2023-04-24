@@ -12,3 +12,6 @@ class Book(models.Model):
     image = models.ImageField(upload_to="book_cover", blank=True, null=True)
     inventory = models.IntegerField()
     daylee_fee = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.title
