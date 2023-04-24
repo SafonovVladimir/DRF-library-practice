@@ -33,3 +33,14 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         book.save()
 
         serializer.save(user_id=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Borrowing.objects.all()
+
+        if not user.is_staff:
+            queryset = queryset.filter(user_id=user)
+
+        is_active = self.request.query_params.get("is_active")
+        if is_active:
+            queryset = queryset.filter(actual_date=None)
