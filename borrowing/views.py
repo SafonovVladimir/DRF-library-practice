@@ -1,14 +1,21 @@
-from typing import Type
+import telegram
 
-from django.shortcuts import render
+from typing import Type
+from django.conf import settings
+from django.utils import timezone
 from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 
 from books.permissions import IsAdminOrReadOnly
 from borrowing.models import Borrowing
-from borrowing.serializers import BorrowingSerializer, BorrowingDetailSerializer
+from borrowing.serializers import (
+    BorrowingSerializer,
+    BorrowingDetailSerializer
+)
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
@@ -24,17 +31,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return BorrowingDetailSerializer
 
         return self.serializer_class
-
-    def perform_create(self, serializer):
-        book = serializer.validated_data.get("book_id")
-        if book.inventory == 0:
-            raise ValidationError("Book inventory is 0.")
-
-        book.inventory -= 1
-        book.save()
-
-        serializer.save(user_id=self.request.user)
-
+     
     def get_queryset(self):
         user = self.request.user
         queryset = Borrowing.objects.all()
@@ -51,3 +48,32 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(user_id=user_id)
 
         return queryset
+
+    def perform_create(self, serializer):
+        book = serializer.validated_data.get("book_id")
+        if book.inventory == 0:
+            raise ValidationError("Book inventory is 0.")
+
+        book.inventory -= 1
+        book.save()
+
+        serializer.save(user_id=self.request.user)
+
+
+@api_view(['GET'])
+def check_overdue_borrowings(request):
+    bot = telegram.Bot(token=settings.TELEGRAM_BOT_TOKEN)
+    borrowings = Borrowing.objects.filter(
+        expected_date__lte=timezone.now(),
+        actual_date__isnull=False
+    )
+    for borrowing in borrowings:
+        message = (f"Book '{list(borrowing.book_id.all())}' is overdue for "
+                   f"{borrowing.user_id.first_name} "
+                   f"{borrowing.user_id.last_name}. Borrowed on "
+                   f"{borrowing.borrow_date.strftime('%Y-%m-%d')}, "
+                   f"expected to return on "
+                   f"{borrowing.expected_date.strftime('%Y-%m-%d')}.")
+        bot.send_message(chat_id=settings.TELEGRAM_CHAT_ID, text=message)
+
+    return Response({"message": f"Overdue borrowings checked."})

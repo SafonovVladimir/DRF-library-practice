@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from .models import Borrowing
+from books.serializers import BookListSerializer
+
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
@@ -16,6 +18,8 @@ class BorrowingSerializer(serializers.ModelSerializer):
 
 
 class BorrowingDetailSerializer(serializers.ModelSerializer):
+    book_id = BookListSerializer(many=True, read_only=True)
+
     class Meta:
         model = Borrowing
         fields = (
@@ -23,5 +27,5 @@ class BorrowingDetailSerializer(serializers.ModelSerializer):
             "borrow_date",
             "expected_date",
             "actual_date",
-            "books",
+            "book_id",
         )
