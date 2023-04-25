@@ -4,6 +4,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
 
 from books.permissions import IsAdminOrReadOnly
 from borrowing.models import Borrowing
@@ -13,7 +14,7 @@ from borrowing.serializers import BorrowingSerializer, BorrowingDetailSerializer
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
-    permission_classes = (IsAdminOrReadOnly, )
+    permission_classes = (IsAuthenticated, )
 
     def get_serializer_class(self) -> Type[Serializer]:
         if self.action == "list":
@@ -33,3 +34,20 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         book.save()
 
         serializer.save(user_id=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Borrowing.objects.all()
+
+        if not user.is_staff:
+            queryset = queryset.filter(user_id=user)
+
+        is_active = self.request.query_params.get("is_active")
+        if is_active:
+            queryset = queryset.filter(actual_date=None)
+
+        user_id = self.request.query_params.get("user_id")
+        if user.is_staff and user_id:
+            queryset = queryset.filter(user_id=user_id)
+
+        return queryset
