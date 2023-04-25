@@ -4,10 +4,10 @@ from django.db import models
 class Author(models.Model):
     first_name = models.CharField(max_length=63)
     last_name = models.CharField(max_length=63)
-    pseudonim = models.CharField(max_length=63, blank=True, null=True)
+    pseudonym = models.CharField(max_length=63, blank=True, null=True)
 
     def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name} ({self.pseudonim})"
+        return f"{self.first_name} {self.last_name} ({self.pseudonym})"
 
 
 class Book(models.Model):
