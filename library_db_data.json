@@ -57,7 +57,7 @@
       "cover": "SOFT",
       "image": "book_cover/kafka_on_the_shore.jpg",
       "inventory": 12,
-      "daily_fee": 2.5
+      "daily_fee": 2
     }
   },
   {
@@ -78,7 +78,7 @@
       "cover": "SOFT",
       "image": "book_cover/foundation.jpg",
       "inventory": 10,
-      "daily_fee": 3.50
+      "daily_fee": 3
     }
   },
 
