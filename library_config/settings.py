@@ -162,16 +162,12 @@ SIMPLE_JWT = {
 TELEGRAM_BOT_TOKEN = "6181915103:AAGaibomvWskgxFEzceqABTtOq8PSzDDP2E"
 TELEGRAM_CHAT_ID = 724066917
 
-# Q_BROKER_URL = "django://"
-
-# BROKER_URL = "django://"
-
 Q_CLUSTER = {
-    'name': 'DjangORM',
-    'workers': 4,
-    'timeout': 90,
-    'retry': 120,
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default'
+    "name": "DjangORM",
+    "workers": 4,
+    "timeout": 90,
+    "retry": 120,
+    "queue_limit": 50,
+    "bulk": 10,
+    "orm": "default"
 }

@@ -12,7 +12,7 @@ def check_overdue_borrowings():
         expected_date__lte=timezone.now(),
         actual_date__isnull=True
     )
-    if borrowings.exist():
+    if borrowings.exists():
         for borrowing in borrowings:
             message = (f"Book '{list(borrowing.book_id.all())}' is overdue for "
                        f"{borrowing.user_id.first_name} "
