@@ -12,5 +12,4 @@ class Borrowing(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return (f"{self.book_id}"
-                f"({self.borrow_date}-{self.expected_date})")
+        return f"ID-{self.id} ({self.borrow_date}-{self.expected_date})"
