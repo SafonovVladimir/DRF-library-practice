@@ -1,9 +1,12 @@
+import datetime
 from typing import Type
 
 from rest_framework import viewsets
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from borrowing.models import Borrowing
 from borrowing.serializers import (
@@ -52,3 +55,19 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             book.save()
 
         serializer.save(user_id=self.request.user)
+
+    @action(detail=True, methods=["GET", "POST"])
+    def return_borrowing(self, request, pk=None):
+        borrowing = self.get_object()
+
+        if borrowing.actual_date:
+            raise ValidationError("This borrowing has already been returned.")
+
+        borrowing.actual_date = datetime.date.today()
+        borrowing.save()
+
+        for book in borrowing.book_id.all():
+            book.inventory += 1
+            book.save()
+
+        return Response("Borrowing returned successfully.")
