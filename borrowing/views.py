@@ -50,12 +50,12 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        book = serializer.validated_data.get("book_id")
-        if book.inventory == 0:
-            raise ValidationError("Book inventory is 0.")
-
-        book.inventory -= 1
-        book.save()
+        books = serializer.validated_data.get("book_id")
+        for book in books:
+            if book.inventory == 0:
+                raise ValidationError("Book inventory is 0.")
+            book.inventory -= 1
+            book.save()
 
         serializer.save(user_id=self.request.user)
 
