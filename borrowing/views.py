@@ -3,9 +3,11 @@ from typing import Type
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.serializers import Serializer
+from rest_framework.exceptions import ValidationError
 
+from books.permissions import IsAdminOrReadOnly
 from borrowing.models import Borrowing
-from borrowing.serializers import BorrowingSerializer
+from borrowing.serializers import BorrowingSerializer, BorrowingDetailSerializer
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
@@ -21,3 +23,13 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return BorrowingDetailSerializer
 
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        book = serializer.validated_data.get("book_id")
+        if book.inventory == 0:
+            raise ValidationError("Book inventory is 0.")
+
+        book.inventory -= 1
+        book.save()
+
+        serializer.save(user_id=self.request.user)
