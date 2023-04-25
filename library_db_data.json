@@ -5,7 +5,7 @@
     "fields": {
       "first_name": "J.K.",
       "last_name": "Rowling",
-      "pseudonim": null
+      "pseudonym": null
     }
   },
   {
@@ -14,7 +14,7 @@
     "fields": {
       "first_name": "George",
       "last_name": "Orwell",
-      "pseudonim": null
+      "pseudonym": null
     }
   },
 
@@ -24,7 +24,7 @@
     "fields": {
       "first_name": "Ernest",
       "last_name": "Hemingway",
-      "pseudonim": null
+      "pseudonym": null
     }
   },
   {
@@ -45,7 +45,7 @@
     "fields": {
       "first_name": "Haruki",
       "last_name": "Murakami",
-      "pseudonim": null
+      "pseudonym": null
     }
   },
   {
@@ -66,7 +66,7 @@
     "fields": {
       "first_name": "Isaac",
       "last_name": "Asimov",
-      "pseudonim": null
+      "pseudonym": null
     }
   },
   {
