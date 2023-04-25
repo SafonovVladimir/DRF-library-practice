@@ -1,11 +1,6 @@
 from typing import Type
 
-import telebot
-from django.utils import timezone
-from django.conf import settings
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -15,7 +10,6 @@ from borrowing.serializers import (
     BorrowingSerializer,
     BorrowingDetailSerializer
 )
-# from borrowing.tasks import check_overdue_borrowings_task
 
 
 class BorrowingViewSet(viewsets.ModelViewSet):
