@@ -75,3 +75,23 @@ API:
 - POST /payments/: Make a payment for a borrowing.
 ### Notifications Service (Telegram)
 This service is responsible for sending notifications about new borrowing created, borrowings overdue, and successful payment. The notifications will be sent via Telegram.
+
+7. Start worker DJANGO_Q:
+```
+python manage.py qcluster
+```
+
+8. Add and configure Scheduled tasks in admin:
+```
+Add a name.
+Write "borrowing.tasks.check_overdue_borrowings" in the func field
+Schedule Type -> Daily
+Repeats: -1
+```
+![](readme_pictures\1.jpg)
+
+![](readme_pictures\2.jpg)
+
+![](readme_pictures\3.jpg)
+
+![](readme_pictures\4.jpg)
