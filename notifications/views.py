@@ -22,8 +22,8 @@ async def get_id_user_telegram(
     updates = await bot.get_updates()
     for update in updates:
         if update.message.text.split()[-1] == unique_identifier:
-            telegram_id = update.message.chat["id"]
-            return telegram_id
+            chat_id = update.message.chat["id"]
+            return chat_id
 
 
 class TelegramBotView(APIView):
@@ -37,13 +37,13 @@ class TelegramBotView(APIView):
     def post(self, request: Request) -> Response:
         api_token = settings.TELEGRAM_BOT_TOKEN
         unique_identifier = request.session.get("unique_identifier")
-        user_id = asyncio.run(get_id_user_telegram(
+        chat_id = asyncio.run(get_id_user_telegram(
             api_token=api_token,
             unique_identifier=unique_identifier)
         )
-        if user_id:
-            if not TelegramUser.objects.filter(telegram_id=user_id).exists():
-                TelegramUser.objects.create(telegram_id=user_id, user=request.user)
+        if chat_id:
+            if not TelegramUser.objects.filter(chat_id=chat_id).exists():
+                TelegramUser.objects.create(chat_id=chat_id, user=request.user)
                 return Response(
                     "You have successfully subscribed to notifications",
                     status=status.HTTP_200_OK
