@@ -36,7 +36,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             return BorrowingDetailSerializer
 
         return self.serializer_class
-     
+
     def get_queryset(self):
         user = self.request.user
         queryset = Borrowing.objects.all()

@@ -115,7 +115,9 @@ class AuthenticatedBooksApiTests(TestCase):
 
     def test_create_book(self):
         author = Author.objects.create(
-            first_name="Sample", last_name="Author", pseudonym="Sample pseudonym"
+            first_name="Sample",
+            last_name="Author",
+            pseudonym="Sample pseudonym"
         )
 
         payload = {

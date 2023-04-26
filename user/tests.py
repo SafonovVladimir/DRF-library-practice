@@ -12,8 +12,8 @@ class UserManagerTest(TestCase):
 
     def test_create_user(self):
         """Test creating a regular user."""
-        User = get_user_model()
-        user = User.objects.create_user(email=self.email, password=self.password, **self.extra_fields)
+        user = get_user_model()
+        user = user.objects.create_user(email=self.email, password=self.password, **self.extra_fields)
         self.assertEqual(user.email, self.email)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
@@ -21,8 +21,8 @@ class UserManagerTest(TestCase):
 
     def test_create_superuser(self):
         """Test creating a superuser."""
-        User = get_user_model()
-        user = User.objects.create_superuser(email=self.email, password=self.password, **self.extra_fields)
+        user = get_user_model()
+        user = user.objects.create_superuser(email=self.email, password=self.password, **self.extra_fields)
         self.assertEqual(user.email, self.email)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser)
