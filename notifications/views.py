@@ -1,8 +1,8 @@
 import uuid
 
-import telegram
 import asyncio
 
+import telegram
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
