@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "drf_spectacular",
     "django_q",
     "rest_framework",
     "books",
@@ -160,7 +161,6 @@ SIMPLE_JWT = {
 }
 
 TELEGRAM_BOT_TOKEN = "6181915103:AAGaibomvWskgxFEzceqABTtOq8PSzDDP2E"
-TELEGRAM_CHAT_ID = 724066917
 
 Q_CLUSTER = {
     "name": "DjangORM",
@@ -170,4 +170,17 @@ Q_CLUSTER = {
     "queue_limit": 50,
     "bulk": 10,
     "orm": "default"
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "City Library API",
+    "DESCRIPTION": "Create, retrieve and delete post",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }
