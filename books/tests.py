@@ -132,7 +132,7 @@ class AuthenticatedBooksApiTests(TestCase):
 
     def test_list_book_filter_by_title(self):
         book_title_1 = sample_book(title="Test")
-        book_title_2 = sample_book(title="Test132")
+        book_title_2 = sample_book(title="132")
         book_title_3 = sample_book(title="")
 
         res = self.client.get(BOOK_URL, {"title": "Test"})
@@ -142,7 +142,7 @@ class AuthenticatedBooksApiTests(TestCase):
         serializer_3 = BookListSerializer(book_title_3)
 
         self.assertIn(serializer_1.data, res.data)
-        self.assertIn(serializer_2.data, res.data)
+        self.assertNotIn(serializer_2.data, res.data)
         self.assertNotIn(serializer_3.data, res.data)
 
         res = self.client.get(BOOK_URL, {"title": ""})
@@ -165,7 +165,7 @@ class AuthenticatedBooksApiTests(TestCase):
         book_author_2.author.add(author_2)
 
         res = self.client.get(
-            BOOK_URL, {"author": "John Rowling"}
+            BOOK_URL, {"author": author_1.id}
         )
 
         serializer_1 = BookListSerializer(book_author_1)
@@ -173,8 +173,8 @@ class AuthenticatedBooksApiTests(TestCase):
         serializer_3 = BookListSerializer(book_author_3)
 
         self.assertIn(serializer_1.data, res.data)
-        self.assertIn(serializer_2.data, res.data)
-        self.assertIn(serializer_3.data, res.data)
+        self.assertNotIn(serializer_2.data, res.data)
+        self.assertNotIn(serializer_3.data, res.data)
 
         res = self.client.get(BOOK_URL, {"author": ""})
 
@@ -182,3 +182,63 @@ class AuthenticatedBooksApiTests(TestCase):
         self.assertIn(serializer_2.data, res.data)
         self.assertIn(serializer_3.data, res.data)
 
+    def test_list_book_filter_by_cover(self):
+        book_cover_1 = sample_book(cover="HARD")
+        book_cover_2 = sample_book(cover="SOFT")
+        book_cover_3 = sample_book(cover="")
+
+        res = self.client.get(
+            BOOK_URL, {"cover": "HARD"}
+        )
+
+        serializer_1 = BookListSerializer(book_cover_1)
+        serializer_2 = BookListSerializer(book_cover_2)
+        serializer_3 = BookListSerializer(book_cover_3)
+
+        self.assertIn(serializer_1.data, res.data)
+        self.assertNotIn(serializer_2.data, res.data)
+        self.assertNotIn(serializer_3.data, res.data)
+
+        res = self.client.get(BOOK_URL, {"cover": "SOFT"})
+
+        self.assertNotIn(serializer_1.data, res.data)
+        self.assertIn(serializer_2.data, res.data)
+        self.assertNotIn(serializer_3.data, res.data)
+
+        res = self.client.get(BOOK_URL, {"cover": ""})
+
+        self.assertIn(serializer_1.data, res.data)
+        self.assertIn(serializer_2.data, res.data)
+        self.assertIn(serializer_3.data, res.data)
+
+
+class AdminBookTests(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user = get_user_model().objects.create_user(
+            "test@test.com",
+            "t1e2s3t4",
+            is_staff=True
+        )
+        self.client.force_authenticate(self.user)
+
+    def test_create_book(self):
+        author = sample_author()
+
+        payload = {
+            "title": "Sample book",
+            "author": author.id,
+            "cover": "HARD",
+            "inventory": 10,
+            "daily_fee": 10,
+        }
+
+        res = self.client.post(BOOK_URL, payload)
+        book = Book.objects.get(id=res.data["id"])
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        for key in payload:
+            if key == "author":
+                self.assertEqual(author, book.author.first())
+            else:
+                self.assertEqual(payload[key], getattr(book, key))

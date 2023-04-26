@@ -3,7 +3,6 @@ from typing import Type
 from rest_framework import viewsets
 from rest_framework.serializers import Serializer
 
-from books import serializers
 from books.models import Book
 from books.permissions import IsAdminOrReadOnly
 from books.serializers import (
@@ -30,7 +29,7 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Retrieve the books with filters"""
         title = self.request.query_params.get("title")
-        authors = self.request.query_params.get("authors")
+        authors = self.request.query_params.get("author")
         cover = self.request.query_params.get("cover")
 
         queryset = self.queryset
@@ -40,9 +39,9 @@ class BookViewSet(viewsets.ModelViewSet):
 
         if authors:
             authors_ids = self._params_to_ints(authors)
-            queryset = queryset.filter(authors__id__in=authors_ids)
+            queryset = queryset.filter(author__id__in=authors_ids)
 
         if cover:
-            queryset = queryset.filter(cover=cover)
+            queryset = queryset.filter(cover=cover.upper())
 
         return queryset.distinct()
