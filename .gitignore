@@ -9,4 +9,5 @@ venv/
 *.pyc
 **db.sqlite3
 media
+migrations
 *_initial.py

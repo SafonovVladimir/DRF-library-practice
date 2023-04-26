@@ -29,7 +29,7 @@ class BookViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """Retrieve the books with filters"""
         title = self.request.query_params.get("title")
-        authors = self.request.query_params.get("authors")
+        authors = self.request.query_params.get("author")
         cover = self.request.query_params.get("cover")
 
         queryset = self.queryset
@@ -39,10 +39,9 @@ class BookViewSet(viewsets.ModelViewSet):
 
         if authors:
             authors_ids = self._params_to_ints(authors)
-            queryset = queryset.filter(authors__id__in=authors_ids)
+            queryset = queryset.filter(author__id__in=authors_ids)
 
         if cover:
-            cover_ids = self._params_to_ints(cover)
-            queryset = queryset.filter(cover__id__in=cover_ids)
+            queryset = queryset.filter(cover=cover.upper())
 
         return queryset.distinct()
