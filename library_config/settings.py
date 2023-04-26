@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -161,6 +162,7 @@ SIMPLE_JWT = {
 }
 
 TELEGRAM_BOT_TOKEN = "6181915103:AAGaibomvWskgxFEzceqABTtOq8PSzDDP2E"
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 Q_CLUSTER = {
     "name": "DjangORM",
@@ -188,5 +190,5 @@ SPECTACULAR_SETTINGS = {
 # Stripe
 STRIPE_SECRET_KEY = "sk_test_51N129sD0TiGbWd1pxsMsrPrItARr5g7dLTCGHNosIqsqjfyPxj146GqoRrmAcvWON6RAeQ5I8T9egVlXpJMTWHCf00mCTI57Hx"
 STRIPE_WEBHOOK_SECRET = "whsec_www"
-CHECKOUT_SUCCESS_URL = 'http://localhost:8000/api/payment/success/'
-CHECKOUT_FAILED_URL = 'http://localhost:8000/api/payment/failed/'
+CHECKOUT_SUCCESS_URL = "http://localhost:8000/api/payment/success/"
+CHECKOUT_FAILED_URL = "http://localhost:8000/api/payment/failed/"
