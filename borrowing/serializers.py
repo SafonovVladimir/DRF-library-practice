@@ -19,6 +19,7 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "actual_date",
             "book_id",
         )
+        read_only_fields = ("actual_date",)
 
     def validate(self, data):
         borrow_date = date.today()
