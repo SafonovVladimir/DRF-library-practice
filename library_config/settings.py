@@ -184,3 +184,9 @@ SPECTACULAR_SETTINGS = {
         "defaultModelExpandDepth": 2,
     },
 }
+
+# Stripe
+STRIPE_SECRET_KEY = "sk_test_51N129sD0TiGbWd1pxsMsrPrItARr5g7dLTCGHNosIqsqjfyPxj146GqoRrmAcvWON6RAeQ5I8T9egVlXpJMTWHCf00mCTI57Hx"
+STRIPE_WEBHOOK_SECRET = "whsec_www"
+CHECKOUT_SUCCESS_URL = 'http://localhost:8000/api/payment/success/'
+CHECKOUT_FAILED_URL = 'http://localhost:8000/api/payment/failed/'
