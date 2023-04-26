@@ -22,7 +22,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
 
         if not self.request.user.is_staff:
-             queryset = queryset.filter()
+            queryset = queryset.filter()
 
         return queryset
 
