@@ -17,9 +17,8 @@ class Payment(models.Model):
     status = models.CharField(max_length=8, choices=StatusChoices.choices)
     type = models.CharField(max_length=8, choices=TypeChoices.choices)
     borrowing = models.OneToOneField(Borrowing, on_delete=models.CASCADE)
-    session_url = models.URLField(default="www.kostyl.com")
-    session_id = models.CharField(max_length=255, default="www.kostyl.com")
-
+    session_url = models.URLField(default="not generated yet")
+    session_id = models.CharField(max_length=255, default="not generated yet")
     @property
     def amount(self):
         extra_days = 0
@@ -27,7 +26,7 @@ class Payment(models.Model):
 
         # After merge change to daily_fee
         for book in self.borrowing.book_id.all():
-            total_fee = book.daylee_fee
+            total_fee = book.daily_fee
 
         if not self.borrowing.actual_date:
             days = (self.borrowing.expected_date
