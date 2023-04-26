@@ -3,6 +3,7 @@ from time import timezone
 from typing import Type
 
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.serializers import Serializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -16,10 +17,16 @@ from borrowing.serializers import (
 )
 
 
+class BorrowingPagination(PageNumberPagination):
+    page_size = 5
+    max_page_size = 20
+
+
 class BorrowingViewSet(viewsets.ModelViewSet):
     queryset = Borrowing.objects.all()
     serializer_class = BorrowingSerializer
     permission_classes = (IsAuthenticated, )
+    pagination_class = BorrowingPagination
 
     def get_serializer_class(self) -> Type[Serializer]:
         if self.action == "list":
