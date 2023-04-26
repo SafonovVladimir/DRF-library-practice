@@ -1,4 +1,5 @@
 import datetime
+from time import timezone
 from typing import Type
 
 from rest_framework import viewsets
@@ -54,6 +55,10 @@ class BorrowingViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
+        user = self.request.user
+        if Borrowing.objects.filter(user_id=user, actual_date=None).exists():
+            raise ValidationError("You already have an active borrowing.")
+
         books = serializer.validated_data.get("book_id")
         for book in books:
             if book.inventory == 0:
@@ -61,7 +66,7 @@ class BorrowingViewSet(viewsets.ModelViewSet):
             book.inventory -= 1
             book.save()
 
-        serializer.save(user_id=self.request.user)
+        serializer.save(user_id=user)
 
     @action(detail=True, methods=["GET", "POST"])
     def return_borrowing(self, request, pk=None):
